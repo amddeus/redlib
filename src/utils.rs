@@ -653,8 +653,6 @@ pub struct Preferences {
 	#[revision(start = 1)]
 	pub fixed_navbar: String,
 	#[revision(start = 1)]
-	pub disable_visit_reddit_confirmation: String,
-	#[revision(start = 1)]
 	pub comment_sort: String,
 	#[revision(start = 1)]
 	pub post_sort: String,
@@ -720,7 +718,6 @@ impl Preferences {
 			video_quality: setting(req, "video_quality"),
 			autoplay_videos: setting(req, "autoplay_videos"),
 			fixed_navbar: setting_or_default(req, "fixed_navbar", "on".to_string()),
-			disable_visit_reddit_confirmation: setting(req, "disable_visit_reddit_confirmation"),
 			comment_sort: setting(req, "comment_sort"),
 			post_sort: setting(req, "post_sort"),
 			subscriptions: setting(req, "subscriptions").split('+').map(String::from).filter(|s| !s.is_empty()).collect(),
@@ -1533,7 +1530,6 @@ mod tests {
 			use_hls: "on".to_owned(),
 			autoplay_videos: "on".to_owned(),
 			fixed_navbar: "on".to_owned(),
-			disable_visit_reddit_confirmation: "on".to_owned(),
 			comment_sort: "confidence".to_owned(),
 			post_sort: "top".to_owned(),
 			subscriptions: vec!["memes".to_owned(), "mildlyinteresting".to_owned()],
@@ -1544,7 +1540,7 @@ mod tests {
 		};
 		let urlencoded = serde_urlencoded::to_string(prefs).expect("Failed to serialize Prefs");
 
-		assert_eq!(urlencoded, "theme=laserwave&front_page=default&layout=compact&wide=on&blur_spoiler=on&show_nsfw=off&blur_nsfw=on&hide_hls_notification=off&video_quality=best&hide_sidebar_and_summary=off&use_hls=on&autoplay_videos=on&fixed_navbar=on&disable_visit_reddit_confirmation=on&comment_sort=confidence&post_sort=top&subscriptions=memes%2Bmildlyinteresting&filters=&hide_awards=off&hide_score=off&remove_default_feeds=off");
+		assert_eq!(urlencoded, "theme=laserwave&front_page=default&layout=compact&wide=on&blur_spoiler=on&show_nsfw=off&blur_nsfw=on&hide_hls_notification=off&video_quality=best&hide_sidebar_and_summary=off&use_hls=on&autoplay_videos=on&fixed_navbar=on&comment_sort=confidence&post_sort=top&subscriptions=memes%2Bmildlyinteresting&filters=&hide_awards=off&hide_score=off&remove_default_feeds=off");
 	}
 }
 

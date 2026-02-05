@@ -19,12 +19,11 @@ use url::form_urlencoded;
 #[template(path = "settings.html")]
 struct SettingsTemplate {
 	prefs: Preferences,
-	url: String,
 }
 
 // CONSTANTS
 
-const PREFS: [&str; 19] = [
+const PREFS: [&str; 18] = [
 	"theme",
 	"front_page",
 	"layout",
@@ -41,7 +40,6 @@ const PREFS: [&str; 19] = [
 	"fixed_navbar",
 	"hide_awards",
 	"hide_score",
-	"disable_visit_reddit_confirmation",
 	"video_quality",
 	"remove_default_feeds",
 ];
@@ -50,10 +48,8 @@ const PREFS: [&str; 19] = [
 
 /// Retrieve cookies from request "Cookie" header
 pub async fn get(req: Request<Body>) -> Result<Response<Body>, String> {
-	let url = req.uri().to_string();
 	Ok(template(&SettingsTemplate {
 		prefs: Preferences::new(&req),
-		url,
 	}))
 }
 

@@ -45,7 +45,6 @@ struct WikiTemplate {
 	wiki: String,
 	page: String,
 	prefs: Preferences,
-	url: String,
 }
 
 #[derive(Template)]
@@ -199,9 +198,9 @@ pub fn quarantine(req: &Request<Body>, sub: String, restriction: &str) -> Respon
 	let wall = WallTemplate {
 		title: format!("r/{sub} is {restriction}"),
 		msg: "Please click the button below to continue to this subreddit.".to_string(),
-		url: req.uri().to_string(),
 		sub,
 		prefs: Preferences::new(req),
+		url: req.uri().to_string(),
 	};
 
 	Response::builder()
@@ -467,7 +466,6 @@ pub async fn wiki(req: Request<Body>) -> Result<Response<Body>, String> {
 
 	let page = req.param("page").unwrap_or_else(|| "index".to_string());
 	let path: String = format!("/r/{sub}/wiki/{page}.json?raw_json=1");
-	let url = req.uri().to_string();
 
 	match json(path, quarantined).await {
 		Ok(response) => Ok(template(&WikiTemplate {
@@ -475,7 +473,6 @@ pub async fn wiki(req: Request<Body>) -> Result<Response<Body>, String> {
 			wiki: rewrite_urls(response["data"]["content_html"].as_str().unwrap_or("<h3>Wiki not found</h3>")),
 			page,
 			prefs: Preferences::new(&req),
-			url,
 		})),
 		Err(msg) => {
 			if msg == "quarantined" || msg == "gated" {
@@ -498,7 +495,6 @@ pub async fn sidebar(req: Request<Body>) -> Result<Response<Body>, String> {
 
 	// Build the Reddit JSON API url
 	let path: String = format!("/r/{sub}/about.json?raw_json=1");
-	let url = req.uri().to_string();
 
 	// Send a request to the url
 	match json(path, quarantined).await {
@@ -513,7 +509,6 @@ pub async fn sidebar(req: Request<Body>) -> Result<Response<Body>, String> {
 			sub,
 			page: "Sidebar".to_string(),
 			prefs: Preferences::new(&req),
-			url,
 		})),
 		Err(msg) => {
 			if msg == "quarantined" || msg == "gated" {

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% import "utils.html" as utils %}
+
+{% block title %}Login - Redlib{% endblock %}
+
+{% block subscriptions %}
+{% call utils::sub_list("") %}
+{% endblock %}
+
+{% block search %}
+{% call utils::search("".to_owned(), "") %}
+{% endblock %}
+
+{% block content %}
+<div id="auth_form">
+	<h1>{% if require_2fa %}Two-Factor Authentication{% else %}Login{% endif %}</h1>
+	
+	{% if !error_msg.is_empty() %}
+	<div class="error_message">{{ error_msg }}</div>
+	{% endif %}
+	
+	<form action="/login" method="POST">
+		{% if require_2fa %}
+		<input type="hidden" name="user_id" value="{{ user_id }}">
+		<div class="form_group">
+			<label for="totp_code">Enter your 2FA code:</label>
+			<input type="text" id="totp_code" name="totp_code" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required autofocus>
+		</div>
+		{% else %}
+		<div class="form_group">
+			<label for="username">Username:</label>
+			<input type="text" id="username" name="username" autocomplete="username" required autofocus>
+		</div>
+		<div class="form_group">
+			<label for="password">Password:</label>
+			<input type="password" id="password" name="password" autocomplete="current-password" required>
+		</div>
+		{% endif %}
+		<button type="submit" class="submit_btn">{% if require_2fa %}Verify{% else %}Login{% endif %}</button>
+	</form>
+	
+	{% if !require_2fa %}
+	<p class="auth_link">Don't have an account? <a href="/register">Register</a></p>
+	{% endif %}
+</div>
+{% endblock %}
