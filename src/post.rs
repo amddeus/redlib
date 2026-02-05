@@ -24,7 +24,6 @@ struct PostTemplate {
 	sort: String,
 	prefs: Preferences,
 	single_thread: bool,
-	url: String,
 	url_without_query: String,
 	comment_query: String,
 }
@@ -96,7 +95,6 @@ pub async fn item(req: Request<Body>) -> Result<Response<Body>, String> {
 				sort,
 				prefs: Preferences::new(&req),
 				single_thread,
-				url: req_url,
 				comment_query: query,
 			}))
 		}

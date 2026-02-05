@@ -84,10 +84,6 @@ pub struct Config {
 	#[serde(alias = "LIBREDDIT_DEFAULT_FILTERS")]
 	pub(crate) default_filters: Option<String>,
 
-	#[serde(rename = "REDLIB_DEFAULT_DISABLE_VISIT_REDDIT_CONFIRMATION")]
-	#[serde(alias = "LIBREDDIT_DEFAULT_DISABLE_VISIT_REDDIT_CONFIRMATION")]
-	pub(crate) default_disable_visit_reddit_confirmation: Option<String>,
-
 	#[serde(rename = "REDLIB_BANNER")]
 	#[serde(alias = "LIBREDDIT_BANNER")]
 	pub(crate) banner: Option<String>,
@@ -149,7 +145,6 @@ impl Config {
 			default_hide_score: parse("REDLIB_DEFAULT_HIDE_SCORE"),
 			default_subscriptions: parse("REDLIB_DEFAULT_SUBSCRIPTIONS"),
 			default_filters: parse("REDLIB_DEFAULT_FILTERS"),
-			default_disable_visit_reddit_confirmation: parse("REDLIB_DEFAULT_DISABLE_VISIT_REDDIT_CONFIRMATION"),
 			banner: parse("REDLIB_BANNER"),
 			robots_disable_indexing: parse("REDLIB_ROBOTS_DISABLE_INDEXING"),
 			pushshift: parse("REDLIB_PUSHSHIFT_FRONTEND"),
@@ -179,7 +174,6 @@ fn get_setting_from_config(name: &str, config: &Config) -> Option<String> {
 		"REDLIB_DEFAULT_HIDE_SCORE" => config.default_hide_score.clone(),
 		"REDLIB_DEFAULT_SUBSCRIPTIONS" => config.default_subscriptions.clone(),
 		"REDLIB_DEFAULT_FILTERS" => config.default_filters.clone(),
-		"REDLIB_DEFAULT_DISABLE_VISIT_REDDIT_CONFIRMATION" => config.default_disable_visit_reddit_confirmation.clone(),
 		"REDLIB_BANNER" => config.banner.clone(),
 		"REDLIB_ROBOTS_DISABLE_INDEXING" => config.robots_disable_indexing.clone(),
 		"REDLIB_PUSHSHIFT_FRONTEND" => config.pushshift.clone(),

@@ -75,7 +75,6 @@ fn info_html(req: &Request<Body>) -> Result<Response<Body>, Error> {
 		title: String::from("Instance information"),
 		body: INSTANCE_INFO.to_string(&StringType::Html),
 		prefs: Preferences::new(req),
-		url: req.uri().to_string(),
 	}
 	.render()
 	.unwrap();
@@ -231,5 +230,4 @@ struct MessageTemplate {
 	title: String,
 	body: String,
 	prefs: Preferences,
-	url: String,
 }

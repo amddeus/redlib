@@ -38,9 +38,6 @@ struct DuplicatesTemplate {
 	/// prefs are the user preferences.
 	prefs: Preferences,
 
-	/// url is the request URL.
-	url: String,
-
 	/// num_posts_filtered counts how many posts were filtered from the
 	/// duplicates list.
 	num_posts_filtered: u64,
@@ -202,7 +199,6 @@ pub async fn item(req: Request<Body>) -> Result<Response<Body>, String> {
 				post,
 				duplicates,
 				prefs: Preferences::new(&req),
-				url: req_url,
 				num_posts_filtered,
 				all_posts_filtered,
 			}))
