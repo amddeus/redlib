@@ -14,7 +14,7 @@ use log::{info, warn};
 use redlib::client::{canonical_path, proxy, rate_limit_check, CLIENT};
 use redlib::server::{self, RequestExt};
 use redlib::utils::{error, redirect, ThemeAssets};
-use redlib::{config, duplicates, headers, instance_info, post, search, settings, subreddit, user};
+use redlib::{auth, config, duplicates, headers, instance_info, post, search, settings, subreddit, user};
 
 use redlib::client::OAUTH_CLIENT;
 
@@ -299,6 +299,14 @@ async fn main() {
 	app.at("/settings/restore").get(|r| settings::restore(r).boxed());
 	app.at("/settings/encoded-restore").post(|r| settings::encoded_restore(r).boxed());
 	app.at("/settings/update").get(|r| settings::update(r).boxed());
+
+	// Authentication routes
+	app.at("/login").get(|r| auth::login_page(r).boxed()).post(|r| auth::login_submit(r).boxed());
+	app.at("/register").get(|r| auth::register_page(r).boxed()).post(|r| auth::register_submit(r).boxed());
+	app.at("/logout").get(|r| auth::logout(r).boxed());
+	app.at("/account").get(|r| auth::account_page(r).boxed());
+	app.at("/account/2fa/setup").get(|r| auth::totp_setup_page(r).boxed()).post(|r| auth::totp_setup_submit(r).boxed());
+	app.at("/account/2fa/disable").post(|r| auth::totp_disable(r).boxed());
 
 	// RSS Subscriptions
 	app.at("/r/:sub.rss").get(|r| subreddit::rss(r).boxed());

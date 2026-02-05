@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% import "utils.html" as utils %}
+
+{% block title %}Register - Redlib{% endblock %}
+
+{% block subscriptions %}
+{% call utils::sub_list("") %}
+{% endblock %}
+
+{% block search %}
+{% call utils::search("".to_owned(), "") %}
+{% endblock %}
+
+{% block content %}
+<div id="auth_form">
+	<h1>Create Account</h1>
+	
+	{% if !error_msg.is_empty() %}
+	<div class="error_message">{{ error_msg }}</div>
+	{% endif %}
+	
+	{% if !success_msg.is_empty() %}
+	<div class="success_message">{{ success_msg }}</div>
+	<p><a href="/login">Go to Login</a></p>
+	{% else %}
+	<form action="/register" method="POST">
+		<div class="form_group">
+			<label for="username">Username:</label>
+			<input type="text" id="username" name="username" autocomplete="username" minlength="3" maxlength="32" pattern="[a-zA-Z0-9_]+" required>
+			<small>3-32 characters, letters, numbers, and underscores only</small>
+		</div>
+		<div class="form_group">
+			<label for="password">Password:</label>
+			<input type="password" id="password" name="password" autocomplete="new-password" minlength="8" required>
+			<small>At least 8 characters</small>
+		</div>
+		<div class="form_group">
+			<label for="confirm_password">Confirm Password:</label>
+			<input type="password" id="confirm_password" name="confirm_password" autocomplete="new-password" minlength="8" required>
+		</div>
+		<button type="submit" class="submit_btn">Create Account</button>
+	</form>
+	
+	<p class="auth_link">Already have an account? <a href="/login">Login</a></p>
+	{% endif %}
+</div>
+{% endblock %}

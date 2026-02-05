@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% import "utils.html" as utils %}
+
+{% block title %}Setup Two-Factor Authentication - Redlib{% endblock %}
+
+{% block subscriptions %}
+{% call utils::sub_list("") %}
+{% endblock %}
+
+{% block search %}
+{% call utils::search("".to_owned(), "") %}
+{% endblock %}
+
+{% block content %}
+<div id="auth_form">
+	<h1>Setup Two-Factor Authentication</h1>
+	
+	{% if !error_msg.is_empty() %}
+	<div class="error_message">{{ error_msg }}</div>
+	{% endif %}
+	
+	<div class="totp_instructions">
+		<p>Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.):</p>
+		<div class="qr_placeholder">
+			<p>QR Code URL: <code>{{ otpauth_url }}</code></p>
+		</div>
+		<p>Or enter this secret manually: <code class="totp_secret">{{ secret }}</code></p>
+	</div>
+	
+	<form action="/account/2fa/setup" method="POST">
+		<input type="hidden" name="secret" value="{{ secret }}">
+		<div class="form_group">
+			<label for="code">Enter the 6-digit code from your app to verify:</label>
+			<input type="text" id="code" name="code" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required autofocus>
+		</div>
+		<button type="submit" class="submit_btn">Enable 2FA</button>
+	</form>
+	
+	<p class="auth_link"><a href="/account">Cancel</a></p>
+</div>
+{% endblock %}

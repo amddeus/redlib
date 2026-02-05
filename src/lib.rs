@@ -1,5 +1,7 @@
+pub mod auth;
 pub mod client;
 pub mod config;
+pub mod db;
 pub mod duplicates;
 pub mod instance_info;
 pub mod oauth;

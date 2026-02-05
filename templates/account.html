@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% import "utils.html" as utils %}
+
+{% block title %}Account - Redlib{% endblock %}
+
+{% block subscriptions %}
+{% call utils::sub_list("") %}
+{% endblock %}
+
+{% block search %}
+{% call utils::search("".to_owned(), "") %}
+{% endblock %}
+
+{% block content %}
+<div id="account_page">
+	<h1>Account Settings</h1>
+	
+	{% if !message.is_empty() %}
+	<div class="success_message">{{ message }}</div>
+	{% endif %}
+	
+	<div class="account_section">
+		<h2>Profile</h2>
+		<p><strong>Username:</strong> {{ user.username }}</p>
+		<p><a href="/logout" class="logout_btn">Logout</a></p>
+	</div>
+	
+	<div class="account_section">
+		<h2>Two-Factor Authentication</h2>
+		{% if user.totp_enabled %}
+		<p class="status_enabled">2FA is enabled</p>
+		<form action="/account/2fa/disable" method="POST">
+			<button type="submit" class="danger_btn">Disable 2FA</button>
+		</form>
+		{% else %}
+		<p class="status_disabled">2FA is not enabled</p>
+		<a href="/account/2fa/setup" class="submit_btn">Enable 2FA</a>
+		{% endif %}
+	</div>
+	
+	<div class="account_section">
+		<h2>Subscribed Feeds ({{ subscriptions.len() }})</h2>
+		{% if subscriptions.len() > 0 %}
+		<ul class="sub_list">
+			{% for sub in subscriptions %}
+			<li>
+				<a href="/r/{{ sub }}">r/{{ sub }}</a>
+				<form action="/r/{{ sub }}/unsubscribe/?redirect=account" method="POST" style="display:inline;">
+					<button type="submit" class="small_btn">Unsubscribe</button>
+				</form>
+			</li>
+			{% endfor %}
+		</ul>
+		{% else %}
+		<p>No subscriptions yet. Visit a subreddit and click Subscribe to add it.</p>
+		{% endif %}
+	</div>
+	
+	<div class="account_section">
+		<h2>Filtered Feeds ({{ filters.len() }})</h2>
+		{% if filters.len() > 0 %}
+		<ul class="sub_list">
+			{% for sub in filters %}
+			<li>
+				<a href="/r/{{ sub }}">r/{{ sub }}</a>
+				<form action="/r/{{ sub }}/unfilter/?redirect=account" method="POST" style="display:inline;">
+					<button type="submit" class="small_btn">Unfilter</button>
+				</form>
+			</li>
+			{% endfor %}
+		</ul>
+		{% else %}
+		<p>No filters set.</p>
+		{% endif %}
+	</div>
+</div>
+{% endblock %}
