@@ -27,7 +27,7 @@
 	<meta property="twitter:description" content="View on Redlib, an alternative private front-end to Reddit.">
 	{% if post.post_type == "image" %}
 	<meta property="og:type" content="image">
-	<meta property="og:image" content="{{ post.thumbnail.url }}">
+	<meta property="og:image" content="{% if let Some(base_url) = request_base_url %}{{ base_url }}{% endif %}{{ post.thumbnail.url }}">
 	<meta property="twitter:card" content="summary_large_image">
 	<meta property="twitter:image" content="{{ post.thumbnail.url }}">
 	{% else if post.post_type == "video" || post.post_type == "gif" %}
