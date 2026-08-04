@@ -7,7 +7,7 @@ use crate::utils::{
 	error, format_num, get_filters, nsfw_landing, param, parse_post, rewrite_emotes, setting, template, time, val, Author, Awards, Comment, Flair, FlairPart, Post, Preferences,
 };
 use askama::Template;
-use hyper::{Body, Request, Response};
+use hyper::{Body, Request, Response, header};
 use regex::Regex;
 use std::collections::{HashMap, HashSet};
 use std::sync::LazyLock;
@@ -24,9 +24,28 @@ struct PostTemplate {
 	url: String,
 	url_without_query: String,
 	comment_query: String,
+	request_base_url: Option<String>,
 }
 
 static COMMENT_SEARCH_CAPTURE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"\?q=(.*)&type=comment").unwrap());
+
+fn request_base_url(req: &Request<Body>) -> Option<String> {
+	let host = req.headers().get(header::HOST)?.to_str().ok()?.trim();
+	if host.is_empty() {
+		return None;
+	}
+
+	let proto = req
+		.headers()
+		.get("x-forwarded-proto")
+		.and_then(|v| v.to_str().ok())
+		.and_then(|v| v.split(',').next())
+		.map(str::trim)
+		.filter(|v| !v.is_empty())
+		.unwrap_or("http");
+
+	Some(format!("{proto}://{host}"))
+}
 
 pub async fn item(req: Request<Body>) -> Result<Response<Body>, String> {
 	// Build Reddit API path
@@ -95,6 +114,7 @@ pub async fn item(req: Request<Body>) -> Result<Response<Body>, String> {
 				single_thread,
 				url: req_url,
 				comment_query: query,
+				request_base_url: request_base_url(&req),
 			}))
 		}
 		// If the Reddit API returns an error, exit and send error page to user
